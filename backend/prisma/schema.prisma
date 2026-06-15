@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// මේ තියෙන්නේ අපේ Tables (Models) ටික
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  profile      UserProfile? 
+  workoutPlans WorkoutPlan[] 
+}
+
+model UserProfile {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  age             Int
+  weight          Float    
+  height          Float    
+  fitnessGoal     String   
+  experienceLevel String   
+  equipmentType   String   
+  updatedAt       DateTime @updatedAt
+}
+
+model WorkoutPlan {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String    
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  workouts  Workout[] 
+}
+
+model Workout {
+  id            String      @id @default(uuid())
+  workoutPlanId String
+  workoutPlan   WorkoutPlan @relation(fields: [workoutPlanId], references: [id], onDelete: Cascade)
+  dayOfWeek     String      
+  muscleGroup   String      
+  exercises     Exercise[]  
+}
+
+model Exercise {
+  id          String  @id @default(uuid())
+  workoutId   String
+  workout     Workout @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  name        String  
+  sets        Int
+  reps        String  
+  restTime    String  
+  isCompleted Boolean @default(false)
+}
