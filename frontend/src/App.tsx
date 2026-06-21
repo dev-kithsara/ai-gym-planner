@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import RegisterForm from './components/RegisterForm';
+import LoginForm from './components/LoginForm';
 import WorkoutGenerator from './components/WorkoutGenerator';
 import Dashboard from './components/Dashboard';
 
@@ -14,7 +15,7 @@ const App = () => {
         <Routes>
           {/* අන්තර්ජාල ලිපිනය '/' නම්, Register Form එක පෙන්වන්න */}
           <Route path="/" element={<RegisterForm />} />
-          
+          <Route path="/login" element={<LoginForm />} />
           {/* අන්තර්ජාල ලිපිනය '/generate' නම්, Workout Generator එක පෙන්වන්න */}
           <Route path="/generate" element={<WorkoutGenerator />} />
 

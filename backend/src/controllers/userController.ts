@@ -37,3 +37,33 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     res.status(500).json({ error: "සර්වර් එකේ පොඩි අවුලක්!" });
   }
 };
+
+// 6. Async Arrow Function
+export const loginUser = async (req: Request, res: Response): Promise<void> => {
+  // Try-Catch
+  try {
+    // 11. Object Destructuring
+    const { email, password } = req.body;
+
+    // Database එකේ මේ Email එක තියෙන User කෙනෙක් ඉන්නවද බලනවා
+    const user = await prisma.user.findUnique({
+      where: { email: email }
+    });
+
+    // User කෙනෙක් නැත්නම් හෝ Password එක වැරදි නම්
+    if (!user || user.passwordHash !== password) {
+      res.status(401).json({ error: "Email එක හෝ Password එක වැරදියි!" });
+      return;
+    }
+
+    // වැඩේ සාර්ථක නම් User ගේ විස්තර Frontend එකට යවනවා
+    res.status(200).json({ 
+      message: "සාර්ථකව ලොග් වුණා!", 
+      user: { id: user.id, name: user.name, email: user.email } 
+    });
+
+  } catch (error) {
+    console.error("Login Error:", error);
+    res.status(500).json({ error: "සර්වර් එකේ අවුලක්!" });
+  }
+};
